@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy Intensive Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inclusive+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#6A5D40;--paper:#FCFCFC;--ink:#3E3329;--line:rgba(62,51,41,.22)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inclusive Sans',system-ui,sans-serif;font-weight:400;background:var(--paper);color:var(--ink);letter-spacing:-.025em;line-height:1.6;font-size:1.0625rem;-webkit-font-smoothing:antialiased}
+h1,h2,h3,legend,.q-l{font-weight:700;letter-spacing:-.045em;line-height:1.02}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1.5rem}
+button{font:inherit;letter-spacing:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* hero */
+.hero{background:var(--ink);color:var(--paper);min-height:100svh;display:flex;align-items:center;padding:6rem 0}
+.hero h1{font-size:clamp(3.4rem,13vw,8.5rem);letter-spacing:-.06em;line-height:.9;margin-bottom:3rem}
+.hero p{font-size:clamp(1.15rem,2.6vw,1.45rem);line-height:1.45;max-width:34rem;opacity:.86;margin-bottom:1.25rem}
+.hero .meta{font-size:1rem;opacity:.6;margin-bottom:3.5rem}
+.rule{width:6rem;height:.5rem;background:var(--gold);margin-bottom:3rem}
+.btn{background:var(--paper);color:var(--ink);border:0;padding:1.15rem 2.4rem;font-weight:700;font-size:1.15rem}
+.btn:hover{background:#fff;box-shadow:.4rem .4rem 0 var(--gold)}
+.btn.dark{background:var(--ink);color:var(--paper)}
+.btn.dark:hover{background:var(--ink);box-shadow:.4rem .4rem 0 var(--gold)}
+.btn.ghost{background:none;color:var(--ink);padding-left:0;padding-right:1.5rem;border:0;text-decoration:underline;text-underline-offset:.3em;text-decoration-thickness:2px;text-decoration-color:var(--gold)}
+.btn:disabled{opacity:.5;cursor:wait}
+
+/* progress */
+#bar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+#bar .wrap{display:flex;justify-content:space-between;padding:.9rem 1.5rem;font-size:.95rem}
+#fill{height:.3rem;background:var(--gold);width:0;transition:width .4s}
+
+/* steps */
+#form{display:none}
+.step{display:none;padding:clamp(4rem,10vw,8rem) 0 4rem}
+.step.on{display:block}
+.step h2{font-size:clamp(2.6rem,9vw,5.6rem);letter-spacing:-.055em;line-height:.95;margin-bottom:1.5rem}
+.step .intro{font-size:1.25rem;line-height:1.45;max-width:34rem;opacity:.85;margin-bottom:1rem}
+.step .bar{width:5rem;height:.4rem;background:var(--gold);margin:2.5rem 0 1rem}
+.q{margin-top:5rem;border:0;padding:0;min-width:0}
+.q-l{display:block;font-size:clamp(1.55rem,4.4vw,2.1rem);line-height:1.1;letter-spacing:-.04em;padding:0}
+.q-n{color:var(--gold);margin-right:.5rem}
+.q-h{margin:.9rem 0 1.4rem;max-width:36rem;opacity:.78;font-size:1rem;line-height:1.5}
+textarea,input[type=text],input[type=email]{width:100%;font:inherit;letter-spacing:inherit;color:var(--ink);background:transparent;border:0;border-bottom:2px solid var(--line);padding:.8rem 0;border-radius:0;transition:border-color .2s}
+textarea{resize:none;min-height:7.5rem;line-height:1.55;overflow:hidden}
+textarea:focus,input:focus{outline:0;border-color:var(--gold)}
+::placeholder{color:rgba(62,51,41,.4)}
+.opt{display:flex;gap:.9rem;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid var(--line);cursor:pointer;line-height:1.35}
+.opt input{appearance:none;flex:none;width:1.4rem;height:1.4rem;margin-top:.05rem;border:2px solid var(--ink);background:var(--paper);display:grid;place-content:center}
+.opt input[type=radio]{border-radius:50%}
+.opt input::before{content:"";width:.7rem;height:.7rem;background:var(--gold);transform:scale(0);transition:transform .12s}
+.opt input[type=radio]::before{border-radius:50%}
+.opt input:checked::before{transform:scale(1)}
+.opt input:checked{border-color:var(--gold)}
+.lk{display:grid;gap:.2rem;margin-bottom:1.4rem}
+.lk span{font-weight:700;letter-spacing:-.03em}
+.field-l{font-weight:700;letter-spacing:-.03em;display:block;margin-top:2.2rem}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:6rem;padding-top:2rem;border-top:1px solid var(--line)}
+.err{color:#8a2d1c;margin-top:1rem;font-weight:700;min-height:1.5rem}
+.hp{position:absolute;left:-9999px}
+
+/* done */
+#done{display:none;background:var(--ink);color:var(--paper);min-height:100svh;align-items:center;padding:6rem 0}
+#done h2{font-size:clamp(3rem,11vw,7rem);letter-spacing:-.06em;line-height:.92;margin-bottom:2.5rem}
+#done p{font-size:1.3rem;line-height:1.45;max-width:34rem;opacity:.88;margin-bottom:1.2rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero"><div class="wrap">
+  <div class="rule"></div>
+  <h1>Strategy Intensive Intake</h1>
+  <p>Before we work together, we need to understand your work, your ambitions and what you want to build next.</p>
+  <p>We’ll explore four connected areas: Foundation, Credibility, Capital and Capacity. Your answers decide which questions we work through first.</p>
+  <p class="meta">25–35 minutes. Be honest and specific. If something is unclear, say so. That is often where the work begins.</p>
+  <button class="btn" id="start">Begin</button>
+</div></section>
+
+<div id="form">
+  <div id="bar"><div class="wrap"><span id="sec"></span><span id="pct"></span></div><div id="fill"></div></div>
+  <div class="wrap"><form id="f" novalidate autocomplete="on"></form></div>
+</div>
+
+<section id="done"><div class="wrap">
+  <div class="rule"></div>
+  <h2>Thank you, <span id="nm"></span>.</h2>
+  <p>Your responses are with us. We will review them before your strategy intensive and come prepared with the questions that matter most.</p>
+  <p>A copy of your answers is on its way to <strong id="em"></strong>. If it doesn’t arrive in a few minutes, check your spam folder.</p>
+</div></section>
+
+<script>
+// ====== CONFIG ======
+const ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+// ====== QUESTIONS ======
+const T=(n,l,h)=>({n,l,h,t:'long'});
+const C=(n,l,h,o)=>({n,l,h,o,t:'check'});
+const S=[
+{k:'About you and your work',i:'Tell us who you are and what you are building.',q:[
+ T(1,'Tell us a little about yourself and the work you currently do.','Describe your professional background, areas of expertise, current roles and the work you’re most invested in.'),
+ T(2,'What are all the different areas of work, projects or initiatives you’re currently involved in?','For example: music, thought leadership, mentorship, career coaching, speaking, community building, consulting, creative projects or other ventures. For each, briefly explain what it is and your current level of involvement.'),
+ T(3,'Which of these areas are currently active, and which are still ideas or projects you want to develop?'),
+ {n:4,l:'Share links to your existing platforms and work.',h:'Include any other links that will help us understand your work.',t:'links',f:['Personal website','Instagram','LinkedIn','YouTube','TikTok or other relevant platforms','Existing community or programme links','Published work, music, interviews, talks, articles or other significant assets']},
+ T(5,'What do you consider your most significant accomplishments, contributions or body of work so far?','These don’t have to be conventional professional achievements. Include work, ideas, projects or results that you’re particularly proud of.')]},
+{k:'Foundation',i:'What are you building?',q:[
+ T(6,'What do you want your work to contribute to the world?','Think beyond individual projects or services. What change, contribution or impact do you want your work to make over time?'),
+ T(7,'What are the ideas, questions, problems or subjects you find yourself returning to repeatedly?','What do you find yourself thinking, writing, speaking or creating about, even when nobody has asked you to?'),
+ T(8,'What do you believe about your field or area of expertise that you think more people need to understand?','Share perspectives, convictions or ideas you would be willing to defend, explain or explore publicly.'),
+ T(9,'If someone followed your work closely for the next five years, what would you want them to have learned, understood, experienced or become capable of doing?'),
+ T(10,'How do you see the different areas of your work connecting?','For example, how do your music, thought leadership, mentorship, career coaching and other initiatives relate to one another? Do they serve a shared purpose, different audiences, or different expressions of the same underlying vision?'),
+ T(11,'What feels unclear, disconnected, underdeveloped or out of alignment in your work right now?')]},
+{k:'Credibility',i:'What should you be known for?',q:[
+ T(12,'What would you like to be known for?','Be as specific as possible. What ideas, expertise, perspectives or contributions would you want people to associate with your name?'),
+ T(13,'Who are the people you most want to reach, influence or serve through your work?','Describe the people you have in mind, what matters to them, and why your work is relevant to them. You may have different audiences for different aspects of your work.'),
+ T(14,'What do people currently come to you for?','Consider the questions they ask, the problems they trust you to help with, the opportunities they bring you, and the things they recognise or appreciate about your work.'),
+ C(15,'What existing intellectual assets or materials have you developed?','Select all that apply.',['Frameworks, models or methodologies','Original ideas or bodies of thought','Research, reports or essays','Articles, newsletters or long-form writing','Talks, lectures, interviews or presentations','Books, manuscripts or book ideas','Courses, programmes or learning materials','Music, creative works or other original productions','Recorded videos, podcasts or audio content','Mentorship, coaching or consulting methodologies','Communities or platforms','None of the above yet','Other']),
+ T(16,'Which of these existing ideas, projects or assets do you believe has the greatest potential to become a significant part of your body of work? Why?'),
+ T(17,'Are there people whose work, communication or influence you admire?','Share names, links or examples if possible, and explain what you admire. This is about understanding your aspirations and sensibilities, not copying another person’s work.')]},
+{k:'Capital',i:'How should your work create value?',q:[
+ T(18,'What are the ways your work currently generates income or creates other forms of value?','Include employment, music, coaching, mentorship, consulting, speaking, products, programmes, partnerships or any other relevant activity. You can share approximate figures if you’re comfortable, but you don’t need to disclose sensitive financial details.'),
+ T(19,'What offers, programmes, services, products or commercial opportunities do you currently have?','For each relevant offering, briefly describe what it is, who it serves and whether it is active, paused or still being developed.'),
+ C(20,'What would you most like your thought leadership to make possible commercially or professionally?','Select all that apply.',['Attract more clients or customers','Grow an existing programme, service or business','Develop and sell intellectual property','Create books, courses or other knowledge products','Attract speaking and media opportunities','Build a larger and more engaged audience','Develop partnerships and collaborations','Grow a community or membership','Attract sponsorships or commercial partnerships','Establish greater authority and influence in my field','Create new professional opportunities','Other']),
+ T(21,'What currently makes it difficult to turn your expertise, ideas or visibility into the outcomes you want?','For example, you may be unsure how to package your ideas, communicate their value, connect your different offerings, reach the right audience, convert attention into demand or create the time and systems to execute consistently.'),
+ T(22,'If we could make meaningful progress on one commercial or professional priority over the next 90 days, what would you want it to be?')]},
+{k:'Capacity',i:'What will it take to build this?',q:[
+ T(23,'How are you currently creating and sharing your work?','Walk us through what happens when you have an idea. How do you develop it, turn it into content or another asset, publish it and distribute it? Who else is involved?'),
+ C(24,'What currently prevents you from creating, publishing or developing your work as consistently as you’d like?','Select all that apply.',['Lack of clarity about what to focus on','Too many ideas or competing priorities','Difficulty structuring my ideas into clear messages','Difficulty turning ideas into finished content','Limited time or competing responsibilities','Lack of a consistent content workflow','Limited design, editing or production support','Difficulty choosing the right platforms or formats','Lack of an audience growth or distribution strategy','Difficulty connecting content to my offers or other goals','Lack of systems for managing my different projects','Difficulty delegating or coordinating collaborators','Other']),
+ T(25,'What resources and support do you currently have available?','Consider your team, collaborators, equipment, platforms, budget, existing processes and the time you can realistically dedicate to this work.'),
+ T(26,'Are there systems, platforms or processes you already use to manage your work?','Include tools for project management, content planning, email marketing, community management, sales, payments, scheduling or audience engagement, where relevant.'),
+ T(27,'Which aspects of your work would you most like to streamline, connect or make easier to sustain?')]},
+{k:'Content co-production',i:'Turning strategy into output.',q:[
+ C(28,'What kinds of content or creative outputs would you most like to develop?','Select all that apply.',['Long-form essays or articles','Short-form social media posts','Video essays or educational videos','Short-form videos','Interviews or podcast appearances','Newsletters','Talks, lectures or presentations','Music-related content','Behind-the-scenes or process documentation','Content promoting my services, programmes or other offerings','Other']),
+ T(29,'What subjects or ideas do you already want to communicate in the coming months?','List any ideas, drafts, questions, experiences, stories or unfinished pieces you’d like us to explore. Don’t worry about organising them.'),
+ T(30,'What content have you created that best represents your thinking, personality and expertise?','Share links or describe the pieces. Tell us what you like about them and what you would improve.'),
+ T(31,'Which formats are you most comfortable creating, and which would you like to develop your capacity for?','For example, you may be comfortable speaking but need support turning your thoughts into written pieces, or you may write well but want to become more confident on video.'),
+ {n:32,l:'How involved would you like to be in the content creation process?',h:'Choose one.',t:'radio',o:['I want to create the content myself, with strategic direction and editorial feedback.','I want to co-create content collaboratively with the team.','I can provide ideas and raw material, but need substantial help developing them.','I would prefer the team to handle most content creation and editing.','My preference will depend on the type of content.']},
+ T(33,'What would make the first month of content co-production successful for you?','Consider what you would like to have created, published, tested or learned by the end of that month.'),
+ T(34,'What practical constraints should we account for during content production?','Consider your availability, filming or recording arrangements, existing commitments, approval process, preferred publishing frequency and any upcoming events or launches.')]},
+{k:'Priorities and expectations',i:'What would make this worth it?',q:[
+ T(35,'What are the three most important things you want us to resolve or make progress on through this engagement?','Rank them if you can.'),
+ T(36,'Is there a particular project, idea, offer or opportunity you believe needs attention first?','Explain why it matters and whether there are any relevant deadlines.'),
+ T(37,'At the end of our strategy and initial content co-production, what would make you feel that this engagement was genuinely valuable?'),
+ T(38,'Is there anything else about your work, ambitions, current challenges or expectations that you would like us to know before the strategy intensive?')]},
+{k:'Materials to share',i:'Last step. Share anything that will help us prepare.',q:[
+ {n:'',l:'Documents and links',h:'Paste links to existing strategy or planning documents, current offers or programme descriptions, previous content, talks or written work, research, frameworks or unfinished manuscripts, brand assets and content calendars. Use shared links (Drive, Dropbox, Notion). For large files, reply to your confirmation email with attachments.',t:'long',id:'materials'}]}
+];
+
+// ====== RENDER ======
+const $=s=>document.querySelector(s), f=$('#f'), esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let cur=0;
+const nq=q=>q.n?`<span class="q-n">${q.n}.</span>`:'';
+function field(q){
+  const id='q'+(q.n||q.id);
+  if(q.t==='long')return `<textarea name="${id}" rows="3" aria-labelledby="l${id}"></textarea>`;
+  if(q.t==='links')return q.f.map((x,i)=>`<label class="lk"><span>${esc(x)}</span><input type="text" name="${id}_${i}" inputmode="url" placeholder="https://"></label>`).join('');
+  const ty=q.t==='radio'?'radio':'checkbox';
+  return q.o.map((x,i)=>`<label class="opt"><input type="${ty}" name="${id}" value="${esc(x)}"><span>${esc(x)}</span></label>`).join('');
+}
+let html=`<div class="hp" aria-hidden="true"><input type="text" name="website_url" tabindex="-1" autocomplete="off"></div>`;
+html+=`<section class="step" data-i="0"><h2>First, who are you?</h2><p class="intro">So we know where to send your copy.</p><div class="bar"></div>
+<label class="field-l" for="name">Full name</label><input type="text" id="name" name="name" autocomplete="name" required>
+<label class="field-l" for="email">Email address</label><input type="email" id="email" name="email" autocomplete="email" required></section>`;
+S.forEach((s,i)=>{
+  html+=`<section class="step" data-i="${i+1}"><h2>${esc(s.k)}</h2><p class="intro">${esc(s.i)}</p><div class="bar"></div>`+
+  s.q.map(q=>{const id='q'+(q.n||q.id);return `<fieldset class="q"><legend class="q-l" id="l${id}">${nq(q)}${esc(q.l)}</legend>${q.h?`<p class="q-h">${esc(q.h)}</p>`:''}${field(q)}</fieldset>`}).join('')+`</section>`;
+});
+f.innerHTML=html+`<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn ghost" id="back">Back</button><button type="button" class="btn dark" id="next">Continue</button></div>`;
+const steps=[...f.querySelectorAll('.step')], N=steps.length;
+
+function show(i){
+  cur=i;steps.forEach((s,j)=>s.classList.toggle('on',j===i));
+  $('#sec').textContent=i===0?'Your details':`${i} of ${N-1}  ·  ${S[i-1].k}`.replace('  ·  ',', ');
+  $('#pct').textContent=Math.round(i/(N-1)*100)+'%';$('#fill').style.width=(i/(N-1)*100)+'%';
+  $('#back').style.visibility=i?'visible':'hidden';
+  $('#next').textContent=i===N-1?'Send my responses':'Continue';
+  $('#err').textContent='';
+  steps[i].querySelectorAll('textarea').forEach(grow);
+  window.scrollTo({top:$('#form').offsetTop,behavior:'instant'});
+}
+function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
+f.addEventListener('input',e=>{if(e.target.tagName==='TEXTAREA')grow(e.target);save()});
+f.addEventListener('change',save);
+
+// autosave
+function data(){const d={};new FormData(f).forEach((v,k)=>{(d[k]=d[k]||[]).push(v)});return d}
+function save(){try{localStorage.setItem('intake',JSON.stringify({d:data(),s:cur}))}catch(e){}}
+function restore(){try{const r=JSON.parse(localStorage.getItem('intake')||'null');if(!r)return 0;
+  [...f.elements].forEach(el=>{const v=r.d[el.name];if(!v||!el.name)return;
+    if(el.type==='checkbox'||el.type==='radio')el.checked=v.includes(el.value);else el.value=v[0]});return r.s||0}catch(e){return 0}}
+
+$('#start').onclick=()=>{$('#hero').style.display='none';$('#form').style.display='block';show(restore())};
+$('#back').onclick=()=>show(cur-1);
+$('#next').onclick=()=>{
+  if(cur===0){const n=$('#name').value.trim(),m=$('#email').value.trim();
+    if(!n||!/^\S+@\S+\.\S+$/.test(m)){$('#err').textContent='Add your name and a valid email address to continue.';return}}
+  save();cur<N-1?show(cur+1):submit()};
+
+// ====== SUBMIT ======
+async function submit(){
+  const d=data(),btn=$('#next');
+  if(d.website_url&&d.website_url[0])return;
+  const answers=[];
+  S.forEach(s=>s.q.forEach(q=>{
+    const id='q'+(q.n||q.id);let v;
+    if(q.t==='links')v=q.f.map((x,i)=>{const u=(d[id+'_'+i]||[''])[0].trim();return u?`${x}: ${u}`:''}).filter(Boolean).join('\n');
+    else v=(d[id]||[]).join(q.t==='check'?'; ':'\n').trim();
+    answers.push({n:q.n||'',label:(q.n?q.n+'. ':'')+q.l,value:v});
+  }));
+  btn.disabled=true;btn.textContent='Sending…';$('#err').textContent='';
+  try{
+    const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:d.name[0].trim(),email:d.email[0].trim(),answers})});
+    const j=await r.json();if(!j.ok)throw new Error(j.error||'Server error');
+    try{localStorage.removeItem('intake')}catch(e){}
+    $('#nm').textContent=d.name[0].trim().split(' ')[0];$('#em').textContent=d.email[0].trim();
+    $('#form').style.display='none';$('#done').style.display='flex';window.scrollTo(0,0);
+  }catch(e){
+    btn.disabled=false;btn.textContent='Send my responses';
+    $('#err').textContent='Your responses did not send. Nothing is lost, so check your connection and press Send again.';
+  }
+}
+</script>
+</body>
+</html>
